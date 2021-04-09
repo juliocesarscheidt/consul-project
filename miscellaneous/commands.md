@@ -1,5 +1,13 @@
 # Some commands
 
+> Docs
+
+<https://learn.hashicorp.com/tutorials/consul/get-started-create-datacenter?in=consul/getting-started>
+
+<https://www.consul.io/docs/install/ports>
+
+<http://nginx.org/en/docs/http/ngx_http_upstream_module.html#resolver>
+
 ```bash
 
 docker-compose up --build -d
