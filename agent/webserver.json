@@ -1,0 +1,17 @@
+{
+  "service": {
+    "name": "webserver",
+    "tags": ["webserver"],
+    "port": 80,
+    "address": "",
+    "check": {
+      "id": "webserver",
+      "name": "Test Nginx on port 80",
+      "http": "http://127.0.0.1:80",
+      "tls_skip_verify": true,
+      "method": "GET",
+      "interval": "10s",
+      "timeout": "5s"
+    }
+  }
+}

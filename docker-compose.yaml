@@ -1,0 +1,82 @@
+version: "3.4"
+
+services:
+  consul-master:
+    container_name: consul-master
+    tty: true
+    build:
+      context: ./master
+      dockerfile: Dockerfile
+    environment:
+      NODE_NAME: node-consul-master
+    ports:
+      - "0.0.0.0:8500:8500/tcp"
+      - "0.0.0.0:8090:80"
+    networks:
+      - subnet_0
+    restart: on-failure
+    volumes:
+      - ./master/nginx.conf:/etc/nginx/nginx.conf
+
+  consul-agent-0:
+    container_name: consul-agent-0
+    tty: true
+    build:
+      context: ./agent
+      dockerfile: Dockerfile
+    environment:
+      NODE_NAME: node-consul-agent-0
+      MASTER_NAME: consul-master
+    networks:
+      - subnet_0
+    restart: on-failure
+    volumes:
+      - ./agent/nginx.conf:/etc/nginx/nginx.conf
+      - ./agent/webserver.json:/etc/consul.d/webserver.json
+
+  consul-agent-1:
+    container_name: consul-agent-1
+    tty: true
+    build:
+      context: ./agent
+      dockerfile: Dockerfile
+    environment:
+      NODE_NAME: node-consul-agent-1
+      MASTER_NAME: consul-master
+    networks:
+      - subnet_0
+    restart: on-failure
+    volumes:
+      - ./agent/nginx.conf:/etc/nginx/nginx.conf
+      - ./agent/webserver.json:/etc/consul.d/webserver.json
+
+  api-v1:
+    container_name: api-v1
+    image: juliocesarmidia/http-simple-api:v1.0.0
+    expose:
+      - 9000
+    environment:
+      API_PORT: 9000
+      MESSAGE: "API v1"
+    networks:
+      subnet_0:
+    restart: on-failure
+
+  api-v2:
+    container_name: api-v2
+    image: juliocesarmidia/http-simple-api:v1.0.0
+    expose:
+      - 9000
+    environment:
+      API_PORT: 9000
+      MESSAGE: "API v2"
+    networks:
+      subnet_0:
+    restart: on-failure
+
+networks:
+  subnet_0:
+    driver: bridge
+
+volumes:
+  dynamodb-storage:
